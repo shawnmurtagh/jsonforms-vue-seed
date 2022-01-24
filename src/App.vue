@@ -1,6 +1,9 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <h1>JSON Forms Vue 3</h1>
+<div style="background-color:black;padding:1em;" class="padding:0,0,0,0">
+  <img alt="Vue logo" src="https://uslbk2chvod1qzfba2bdeol1-wpengine.netdna-ssl.com/wp-content/uploads/2021/06/fsl-logo.png" />
+  <h1 style="color:white;">Tech Radar Maker</h1>
+</div>
+<button :click="saveRadar">Save Radar</button>
   <div class="myform">
     <json-forms
       :data="data"
@@ -10,6 +13,10 @@
       @change="onChange"
     />
   </div>
+  <div>
+    {{data}}
+  </div>
+    <div><a href="https://radar.thoughtworks.com/">Paste contents of 'technologies' array here.</a></div>
 </template>
 
 <script lang="ts">
@@ -31,84 +38,74 @@ const renderers = [
 
 const schema = {
   properties: {
-    name: {
-      type: "string",
-      minLength: 1,
-      description: "The task's name"
-    },
-    description: {
-      title: "Long Description",
-      type: "string",
-    },
-    done: {
-      type: "boolean",
-    },
-    dueDate: {
-      type: "string",
-      format: "date",
-      description: "The task's due date"
-    },
-    rating: {
-      type: "integer",
-      maximum: 5,
-    },
-    recurrence: {
-      type: "string",
-      enum: ["Never", "Daily", "Weekly", "Monthly"]
-    },
-    recurrenceInterval: {
-      type: "integer",
-      description: "Days until recurrence"
+    technologies:{
+      type:"array",
+      items:{
+        type:"object",
+        properties:{
+          name: {
+            title:"Technology Name",
+            type: "string",
+            minLength: 1,
+          },
+          ring: {
+            type:"string",
+            enum: ["Assess", "Trial", "Adopt", "Hold"]
+          },
+          quadrant: {
+            type:"string",
+            enum: ["Platform", "Library/Framework", "Tool", "Hold"]
+          },
+          isNew: {
+            type: "boolean",
+          },
+          description: {
+            type: "string",
+            maximum: 5,
+          },
+        },
+      },
     },
   },
 };
 
 const uischema = {
-  type: "HorizontalLayout",
-  elements: [
+  "type": "VerticalLayout",
+  "elements": [
     {
-      type: "VerticalLayout",
-      elements: [
-        {
+      "type": "Control",
+      "scope": "#/properties/technologies",
+      "options": {
+        "elementLabelProp": "name",
+        "detail": {
+          "type": "VerticalLayout",
+          "elements": [
+            {
           type: "Control",
           scope: "#/properties/name",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/description",
-          options: {
-            multi: true,
+          },
+          {
+            type: "Control",
+            scope: "#/properties/ring",
+          },
+          {
+            type: "Control",
+            scope: "#/properties/quadrant",
+          },
+          {
+            type: "Control",
+            scope: "#/properties/isNew",
+          },
+          {
+            type: "Control",
+            scope: "#/properties/description",
+          },
+            ]
           }
-        },
-        {
-          type: "Control",
-          scope: "#/properties/done",
-        },
-      ],
-    },
-    {
-      type: "VerticalLayout",
-      elements: [
-        {
-          type: "Control",
-          scope: "#/properties/dueDate",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/rating",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/recurrence",
-        },
-        {
-          type: "Control",
-          scope: "#/properties/recurrenceInterval",
-        },
-      ],
-    },
-  ],
-};
+      }
+    }
+  ]
+}
 
 export default defineComponent({
   name: "App",
@@ -120,11 +117,11 @@ export default defineComponent({
       // freeze renderers for performance gains
       renderers: Object.freeze(renderers),
       data: {
-        name: "Send email to Adrian",
-        description: "Confirm if you have passed the subject\nHereby ...",
-        done: true,
-        recurrence: "Daily",
-        rating: 3,
+        technologies:[
+          {
+            name:"test"
+          }
+        ]
       },
       schema,
       uischema,
@@ -134,6 +131,9 @@ export default defineComponent({
     onChange(event: JsonFormsChangeEvent) {
       this.data = event.data;
     },
+    saveRadar() {
+    // not implemented
+    }
   },
   provide() {
     return {
